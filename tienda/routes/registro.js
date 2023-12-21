@@ -9,20 +9,19 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next){
     let user = req.body.user;
-    if(users[user]){
-        users.comparePass(req.body.pass, users[user].hash, function(err, result){
-            if(result){
-                req.session.user = users[user];
-                req.session.message = "Welcome!"
-                res.redirect("/restricted");
-            } else {
-                req.session.error = "Incorrect user or password";
-                res.redirect("/login");
-            }
+    let pass = req.body.pass;
+    if(!users[user]){
+        users.register(user, pass, function() {
+            req.session.user = users[user];
+            console.log("User:\t" + user+ "\tsuccessfully registred");
+            console.log("Pass:\t" + pass + "\tsuccessfully registred");
+
+            req.session.message = 'Usuario registrado!';
+            res.redirect('/restricted');
         });
     } else {
-        req.session.error = "Incorrect user or password";
-        res.redirect("/login");
+        req.session.error = 'El usuario ya está registrado.';
+        res.redirect('/login');
     }
 });
 

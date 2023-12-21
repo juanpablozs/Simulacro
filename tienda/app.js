@@ -7,6 +7,7 @@ const session = require('express-session');
 
 let indexRouter = require('./routes/index');
 let loginRouter = require('./routes/login');
+let registroRouter = require('./routes/registro');
 let restrictedRouter = require('./routes/restricted');
 
 let app = express();
@@ -38,8 +39,10 @@ app.use(function(req, res, next){
   next();
 });
 
+app.use('/javascripts', express.static('public/javascripts'));
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
+app.use('/registro', registroRouter);
 app.use('/restricted', restrict, restrictedRouter);
 app.use('/logout', function(req, res, next){
   req.session.destroy(function(){
